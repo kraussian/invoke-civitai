@@ -33,7 +33,8 @@ But Civitai only understands models identified using a `sha256` hash, so there a
 I've used the latter, since the former option has a hard dependency that the models used to generate the images still exist on the user's computer. I might add an option to do that in future, but for now I feel that changing InvokeAI's hashing setting is a more streamlined approach as the hashes can be read directly from the generated images.
 
 ### Usage Instructions
-1. Drag & Drop the images you want to convert to the `converter.bat` file
-2. That's it! The converted images will be saved in the same folder as the original, with `_a1111` appended to the file name
+1. Download the latest release, and unzip to a new folder
+2. Drag & Drop the images you want to convert to the `converter.bat` file
+3. That's it! The converted images will be saved in the same folder as the original, with `_a1111` appended to the file name
 
 Now you can upload the converted images to Civitai, and all parameters and models (including LoRAs) used by the image will automagically be filled in by Civitai upon upload.
