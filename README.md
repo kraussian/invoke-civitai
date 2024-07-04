@@ -1,10 +1,10 @@
 # invoke-civitai
 
 ## Summary
-Convert metadata from InvokeAI for automatic recognition when uploading to CivitAI
+Convert metadata from [InvokeAI](https://github.com/invoke-ai/InvokeAI) for automatic recognition when uploading to [CivitAI](https://civitai.com)
 
 ## Background
-I love InvokeAI much more than Automatic1111 WebUI, because the interface is much more streamlined, user-friendly and it "just works".  
+I actually love [InvokeAI](https://github.com/invoke-ai/InvokeAI) more than [Automatic1111 WebUI](https://github.com/AUTOMATIC1111/stable-diffusion-webui), because the interface is much more streamlined, user-friendly and it "just works".  
 But unfortunately Civitai doesn't recognize metadata from images generated with InvokeAI, so I've written a script to convert InvokeAI metadata format to Automatic1111 format so that Civitai can recognize them.
 
 ## How to Use
