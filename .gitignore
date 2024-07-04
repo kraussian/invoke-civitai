@@ -3,6 +3,11 @@
 *.jpg
 *.jpeg
 
+# Packaged files
+*.zip
+*.7z
+*.rar
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
