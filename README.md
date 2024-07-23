@@ -12,7 +12,7 @@ But unfortunately Civitai doesn't recognize metadata from images generated with 
 * Python (ideally v3.10 and above)
 * InvokeAI (of course)
 
-### Prerequisite Setup for InvokeAI
+### Option 1: Setup InvokeAI to calculate model hashes in sha256
 1. Go to the folder where InvokeAI is installed
 2. Open the file `invokeai.yaml` in a text editor
 3. Add the line `hashing_algorithm: 'sha256'` so the `invokeai.yaml` file will look something like below:
@@ -30,7 +30,20 @@ But Civitai only understands models identified using a `sha256` hash, so there a
 1. Read in all models used by a particular image, and calculate the `sha256` hash for them
 2. Change InvokeAI settings so that `sha256` hashes are saved as metadata in generated images
 
-I've used the latter, since the former option has a hard dependency that the models used to generate the images still exist on the user's computer. I might add an option to do that in future, but for now I feel that changing InvokeAI's hashing setting is a more streamlined approach as the hashes can be read directly from the generated images.
+### Option 2: Setup config file to point to model folders
+1. Open `invokeai_cfg.json` in a text editor
+2. Change the values of `model_folder`, `vae_folder` and `lora_folder` to the actual locations on your PC where these model files are stored
+**!! IMPORTANT !!** Change any backslashes (`\`) to forward slashes (`/`) when entering the model paths
+
+For example, let's say your checkpoint models are stored in `C:\sd\stable-diffusion-webui\models\Stable-Diffusion`, VAE models in `C:\sd\stable-diffusion-webui\models\VAE` and LoRA models in `C:\sd\stable-diffusion-webui\models\Lora`.  
+Then change the `invokeai_cfg.json` file like so:
+```json
+{
+    "model_folder": "C:/sd/stable-diffusion-webui/models/Stable-Diffusion",
+    "vae_folder": "C:/sd/stable-diffusion-webui/models/VAE",
+    "lora_folder": "C:/sd/stable-diffusion-webui/models/Lora"
+}
+```
 
 ### Usage Instructions
 1. Download the latest release, and unzip to a new folder
