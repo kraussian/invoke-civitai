@@ -25,10 +25,8 @@ hashing_algorithm: 'sha256'
 ```
 4. **!! IMPORTANT !!** Remove all installed models (including LoRAs and VAEs if any), and install them again
 
+#### Explanation
 InvokeAI by default saves model hashes using `BLAKE3` algorithm, while Automatic1111 saves them using `sha256`. As these hashing algorithms are designed to be unidirectional, it's practically impossible to reverse-engineer a `BLAKE3` back to the original form and convert it to a `sha256` hash.  
-But Civitai only understands models identified using a `sha256` hash, so there are two ways around it:  
-1. Read in all models used by a particular image, and calculate the `sha256` hash for them
-2. Change InvokeAI settings so that `sha256` hashes are saved as metadata in generated images
 
 ### Option 2: Setup config file to point to model folders
 1. Open `invokeai_cfg.json` in a text editor
