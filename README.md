@@ -1,4 +1,4 @@
-# invoke-civitai
+# Invoke-CivitAI
 
 ## Summary
 Convert metadata from [InvokeAI](https://github.com/invoke-ai/InvokeAI) for automatic recognition when uploading to [CivitAI](https://civitai.com)
@@ -40,6 +40,17 @@ Then change the `invokeai_cfg.json` file like so:
     "model_folder": "C:/sd/stable-diffusion-webui/models/Stable-Diffusion",
     "vae_folder": "C:/sd/stable-diffusion-webui/models/VAE",
     "lora_folder": "C:/sd/stable-diffusion-webui/models/Lora"
+}
+```
+
+### Support for In-painted Images
+1. Similar to the instructions for **Option 2**, open `invokeai_cfg.json` in a text editor
+2. Change the value of `invokeai_output_folder` to the actual location on your PC where InvokeAI stores image outputs. It is typically `\outputs\images` under the folder where InvokeAI is installed.
+
+For example:
+```json
+{
+    "invokeai_output_folder": "C:/sd/invokeai/outputs/images"
 }
 ```
 

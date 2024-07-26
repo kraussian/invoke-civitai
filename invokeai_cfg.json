@@ -1,5 +1,6 @@
 {
     "model_folder": "C:/StableDiffusion",
     "vae_folder": "C:/StableDiffusion/VAE",
-    "lora_folder": "C:/StableDiffusion/LoRA"
+    "lora_folder": "C:/StableDiffusion/LoRA",
+    "invokeai_output_folder": "C:/sd/invokeai/outputs/images"
 }
