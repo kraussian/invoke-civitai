@@ -106,9 +106,10 @@ def main() -> None:
                     org_filename = json_data['_canvas_objects'][0]['imageName']
                     org_filepath = os.path.join(invokeai_cfg['invokeai_output_folder'], org_filename)
                     if os.path.exists(org_filepath):
-                        im_invoke = Image.open(org_filepath)
-                        im_invoke.load()
-                        json_data = json.loads(im_invoke.info['invokeai_metadata'])
+                        im_original = Image.open(org_filepath)
+                        im_original.load()
+                        json_data = json.loads(im_original.info['invokeai_metadata'])
+                        del im_original
                     else:
                         print(f"        ERROR: Original image {org_filename} not found! Skipping file...")
                         continue
