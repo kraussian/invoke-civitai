@@ -55,7 +55,7 @@ def calculate_sha256(filename:str) -> str:
         return "NOFILE"
 
 def calculate_shorthash(filename:str, hash_cache:Any) -> str:
-    if os.path.basename(filename) in hash_cache:
+    if os.path.basename(filename) in hash_cache and "NOFILE" != hash_cache[os.path.basename(filename)]:
         shorthash = hash_cache[os.path.basename(filename)]
     else:
         print(f"    Calculating model hash for {os.path.basename(filename)}. This will take a few seconds...", flush=True)
@@ -136,14 +136,15 @@ def main() -> None:
         else:
             print("        Model hash is not sha256! Attempting to calculate hash from model file", flush=True)
             if 'model_folder' in invokeai_cfg:
-                model_hash = calculate_shorthash(f"{invokeai_cfg['model_folder']}/{json_data['model']['name']}.safetensors", hash_cache)
+                model_file = f"{invokeai_cfg['model_folder']}/{json_data['model']['name']}.safetensors"
+                model_hash = calculate_shorthash(model_file, hash_cache)
                 if model_hash != "NOFILE":
                     meta_mhash = 'Model hash: ' + model_hash
                 else:
-                    print("        ERROR: Model file not found! Skipping file...", flush=True)
+                    print(f"        ERROR: Model file {model_file} not found! Skipping file...", flush=True)
                     continue
             else:
-                print("        ERROR: Model folder not configured in invokeai_cfg.json! Skipping file...", flush=True)
+                print(f"        ERROR: Model folder not configured in invokeai_cfg.json! Skipping model {json_data['model']} ...", flush=True)
                 continue
         meta_params = [meta_steps, meta_sampler, meta_type, meta_cfg, meta_seed, meta_size, meta_mhash, meta_mname]
 
@@ -157,14 +158,15 @@ def main() -> None:
             else:
                 print("        Model hash is not sha256! Attempting to calculate hash from model file", flush=True)
                 if 'vae_folder' in invokeai_cfg:
-                    model_hash = calculate_shorthash(f"{invokeai_cfg['vae_folder']}/{json_data['vae']['name']}.safetensors", hash_cache)
+                    model_file=f"{invokeai_cfg['vae_folder']}/{json_data['vae']['name']}.safetensors"
+                    model_hash = calculate_shorthash(model_file, hash_cache)
                     if model_hash != "NOFILE":
                         meta_vhash = 'VAE hash: ' + model_hash
                     else:
-                        print("        ERROR: Model file not found! Skipping file...", flush=True)
+                        print(f"        ERROR: Model file {model_file} not found! Skipping file...", flush=True)
                         continue
                 else:
-                    print("        ERROR: Model folder not configured in invokeai_cfg.json! Skipping file...", flush=True)
+                    print(f"        ERROR: Model folder not configured in invokeai_cfg.json! Skipping model {meta_vname}...", flush=True)
                     continue
             meta_params.append(meta_vhash)
             meta_params.append(meta_vname)
@@ -181,12 +183,13 @@ def main() -> None:
                 else:
                     print("        Model hash is not sha256! Attempting to calculate hash from model file", flush=True)
                     if 'lora_folder' in invokeai_cfg:
-                        lora_hash = calculate_shorthash(f"{invokeai_cfg['lora_folder']}/{lora['model']['name']}.safetensors", hash_cache)
+                        model_file=f"{invokeai_cfg['lora_folder']}/{lora['model']['name']}.safetensors"
+                        lora_hash = calculate_shorthash(model_file, hash_cache)
                         if lora_hash == "NOFILE":
-                            print("        ERROR: Model file not found! Skipping file...", flush=True)
+                            print(f"        ERROR: Model file {model_file} not found! Skipping file...", flush=True)
                             continue
                     else:
-                        print("        ERROR: Model folder not configured in invokeai_cfg.json! Skipping file...", flush=True)
+                        print(f"        ERROR: Model folder not configured in invokeai_cfg.json! Skipping LORA {lora_name}...", flush=True)
                         continue
                 meta_lora += lora_name + ': ' + lora_hash
                 meta_positive += ' <lora:' + lora_name + ':' + str(lora['weight']) + '>'
