@@ -26,6 +26,7 @@ sampler_info = {
     'dpmpp_sde_k': {'name': 'DPM++ SDE', 'type': 'Karras'},
     'dpmpp_2s_k': {'name': 'DPM++ 2S', 'type': 'Karras'},
     'dpmpp_2m_k': {'name': 'DPM++ 2M', 'type': 'Karras'},
+    'dpmpp_3m_k' :{'name': 'DPM++ 3M', 'type': 'Karras'},
     'dpmpp_2m_sde_k': {'name': 'DPM++ 2M SDE', 'type': 'Karras'},
     'heun_k': {'name': 'Heun', 'type': 'Karras'},
     'lms_k': {'name': 'LMS Karras', 'type': 'Karras'},
@@ -119,11 +120,18 @@ def main() -> None:
 
         # Build base metadata
         meta_positive = json_data['positive_prompt']
-        meta_negative = '\nNegative prompt: ' + json_data['negative_prompt']
+        meta_negative = ''
+        if 'negative_prompt' in json_data:
+            meta_negative = '\nNegative prompt: ' + json_data['negative_prompt']
         meta_steps = '\nSteps: ' + str(json_data['steps'])
-        meta_sampler = 'Sampler: ' + sampler_info[json_data['scheduler']]['name']
-        meta_type = 'Schedule type: ' + sampler_info[json_data['scheduler']]['type']
-        meta_cfg = 'CFG scale: ' + str(json_data['cfg_scale'])
+        meta_sampler = ''
+        meta_type = ''
+        if 'scheduler' in json_data:
+            meta_sampler = 'Sampler: ' + sampler_info[json_data['scheduler']]['name']
+            meta_type = 'Schedule type: ' + sampler_info[json_data['scheduler']]['type']
+        meta_cfg = ''
+        if 'cfg_scale' in json_data:
+            meta_cfg = 'CFG scale: ' + str(json_data['cfg_scale'])
         meta_seed = 'Seed: ' + str(json_data['seed'])
         meta_size = 'Size: ' + str(json_data['width']) + 'x' + str(json_data['height'])
         meta_mname = 'Model: ' + json_data['model']['name']
