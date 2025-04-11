@@ -63,7 +63,7 @@ def calculate_shorthash(filename:str, hash_cache:Any) -> str:
     if os.path.basename(filename) in hash_cache and "NOFILE" != hash_cache[os.path.basename(filename)]:
         shorthash = hash_cache[os.path.basename(filename)]
     else:
-        logger.info(f"    Calculating model hash for {os.path.basename(filename)}. This will take a few seconds...", flush=True)
+        logger.info(f"    Calculating model hash for {os.path.basename(filename)}. This will take a few seconds...")
         longhash = calculate_sha256(filename)
         shorthash = longhash[0:10]
         save_model_hash(os.path.basename(filename), shorthash, hash_cache)
@@ -81,6 +81,7 @@ def parse_args() -> argparse.Namespace:
     args = parser.parse_args()
     
     logging.basicConfig(level=getattr(logging, args.log))
+    logger.critical("Logger initialized at level " + args.log)
     
     return args
 
@@ -96,12 +97,12 @@ def main() -> None:
 
     if os.path.exists("./invokeai_cfg.json"):
         with open("./invokeai_cfg.json", "r") as f:
-            logger.info("    Config file found", flush=True)
+            logger.info("    Config file found")
             invokeai_cfg = json.load(f)
 
     if os.path.exists("./hash_cache.json"):
         with open("./hash_cache.json", "r") as f:
-            logger.info("    Hash cache found", flush=True)
+            logger.info("    Hash cache found")
             hash_cache = json.load(f)
 
     file_count = len(args.filename)
@@ -109,7 +110,7 @@ def main() -> None:
 
     for filename in args.filename:
         # Load file and import metadata
-        logger.info(f"    Processing file: {filename}", flush=True)
+        logger.info(f"    Processing file: {filename}")
         im_invoke = Image.open(filename)
         im_invoke.load()
         if 'invokeai_metadata' not in im_invoke.info:
@@ -160,17 +161,17 @@ def main() -> None:
             meta_mhash = 'Model hash: ' + model_hash
             save_model_hash(f"{json_data['model']['name']}.safetensors", model_hash, hash_cache)
         else:
-            logger.info("        Model hash is not sha256! Attempting to calculate hash from model file", flush=True)
+            logger.info("        Model hash is not sha256! Attempting to calculate hash from model file")
             if 'model_folder' in invokeai_cfg:
                 model_file = f"{invokeai_cfg['model_folder']}/{json_data['model']['name']}.safetensors"
                 model_hash = calculate_shorthash(model_file, hash_cache)
                 if model_hash != "NOFILE":
                     meta_mhash = 'Model hash: ' + model_hash
                 else:
-                    logger.error(f"        ERROR: Model file {model_file} not found! Skipping file...", flush=True)
+                    logger.error(f"        ERROR: Model file {model_file} not found! Skipping file...")
                     continue
             else:
-                logger.error(f"        ERROR: Model folder not configured in invokeai_cfg.json! Skipping model {json_data['model']} ...", flush=True)
+                logger.error(f"        ERROR: Model folder not configured in invokeai_cfg.json! Skipping model {json_data['model']} ...")
                 continue
         meta_params = [meta_steps, meta_sampler, meta_type, meta_cfg, meta_seed, meta_size, meta_mhash, meta_mname]
 
@@ -182,17 +183,17 @@ def main() -> None:
                 meta_vhash = 'VAE hash: ' + model_hash
                 save_model_hash(f"{json_data['vae']['name']}.safetensors", model_hash, hash_cache)
             else:
-                logger.info("        Model hash is not sha256! Attempting to calculate hash from model file", flush=True)
+                logger.info("        Model hash is not sha256! Attempting to calculate hash from model file")
                 if 'vae_folder' in invokeai_cfg:
                     model_file=f"{invokeai_cfg['vae_folder']}/{json_data['vae']['name']}.safetensors"
                     model_hash = calculate_shorthash(model_file, hash_cache)
                     if model_hash != "NOFILE":
                         meta_vhash = 'VAE hash: ' + model_hash
                     else:
-                        logger.error(f"        ERROR: Model file {model_file} not found! Skipping file...", flush=True)
+                        logger.error(f"        ERROR: Model file {model_file} not found! Skipping file...")
                         continue
                 else:
-                    logger.error(f"        ERROR: Model folder not configured in invokeai_cfg.json! Skipping model {meta_vname}...", flush=True)
+                    logger.error(f"        ERROR: Model folder not configured in invokeai_cfg.json! Skipping model {meta_vname}...")
                     continue
             meta_params.append(meta_vhash)
             meta_params.append(meta_vname)
@@ -207,15 +208,15 @@ def main() -> None:
                     lora_hash = model_hash
                     save_model_hash(f"{lora['model']['name']}.safetensors", model_hash, hash_cache)
                 else:
-                    logger.info("        Model hash is not sha256! Attempting to calculate hash from model file", flush=True)
+                    logger.info("        Model hash is not sha256! Attempting to calculate hash from model file")
                     if 'lora_folder' in invokeai_cfg:
                         model_file=f"{invokeai_cfg['lora_folder']}/{lora['model']['name']}.safetensors"
                         lora_hash = calculate_shorthash(model_file, hash_cache)
                         if lora_hash == "NOFILE":
-                            logger.error(f"        ERROR: Model file {model_file} not found! Skipping file...", flush=True)
+                            logger.error(f"        ERROR: Model file {model_file} not found! Skipping file...")
                             continue
                     else:
-                        logger.error(f"        ERROR: Model folder not configured in invokeai_cfg.json! Skipping LORA {lora_name}...", flush=True)
+                        logger.error(f"        ERROR: Model folder not configured in invokeai_cfg.json! Skipping LORA {lora_name}...")
                         continue
                 meta_lora += lora_name + ': ' + lora_hash
                 meta_positive += ' <lora:' + lora_name + ':' + str(lora['weight']) + '>'
@@ -234,7 +235,7 @@ def main() -> None:
         # Save the image with the metadata
         new_filename = os.path.join(os.path.dirname(filename), os.path.basename(filename).split('.')[0] + '_a1111.' + os.path.basename(filename).split('.')[1])
         im_invoke.save(new_filename, pnginfo=metadata)
-        logger.info(f"    Converted file saved as: {new_filename}", flush=True)
+        logger.info(f"    Converted file saved as: {new_filename}")
         successes += 1
 
     logger.info(f"Work complete. {successes} / {file_count} files successfully converted.")
